@@ -9,7 +9,7 @@ cd GalloShoppingList
 npm i
 
 Rodar o projeto:
-npx expo start 
+npx expo start --localhost --android
 
 Rodar na web:
 npx expo install react-dom react-native-web @expo/metro-runtime
