@@ -1,40 +1,11 @@
+import React, { useState } from 'react'
 import { Alert, FlatList, ImageBackground, SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useState, useEffect } from 'react'
-import {Ionicons} from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import ItemList from '../components/ItemList';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Home() {
   const [textInput, setTextInput] = useState('');
   const [items, setItems] = useState([]);
-
-  useEffect(() => {
-    getItemsFromDevice();
-  }, []);
-
-  useEffect(() => {
-    saveItemToDevice();
-  }, [items]);
-
-  const getItemsFromDevice = async () => {
-    try {
-      const itemsMemory = await AsyncStorage.getItem('GalloShoppingList');
-      if (itemsMemory != null) {
-        setItems(JSON.parse(itemsMemory));
-      }
-    } catch (error) {
-      console.log(`Erro: ${error}`)
-    }
-  }
-
-const saveItemToDevice = async () => {
-  try {
-    const itemsJson = JSON.stringify(items);
-    await AsyncStorage.setItem('GalloShoppingList', itemsJson);
-  } catch (error) {
-    console.log(`Erro: ${error}`)
-  }
-}
 
   const addItem = () => {
     if (textInput == '') {
@@ -45,7 +16,7 @@ const saveItemToDevice = async () => {
     } else {
       const newItem = {
         id: Date.now().toString(),
-        name: textInput, 
+        name: textInput,
         bought: false
       }
       setItems([...items, newItem]);
@@ -61,7 +32,7 @@ const saveItemToDevice = async () => {
       return item;
     });
     setItems(newItems);
-  }  
+  }
 
   const unmarkItemBought = itemId => {
     const newItems = items.map((item) => {
@@ -92,8 +63,8 @@ const saveItemToDevice = async () => {
 
   const removeAll = () => {
     Alert.alert(
-      "Limpar Lista?", "Confirma a exclusão de todos os produtos?"
-      [ 
+      "Limpar Lista?", "Confirma a exclusão de todos os produtos?",
+      [
         {
           text: 'Sim',
           onPress: () => { setItems([]) }
@@ -113,31 +84,30 @@ const saveItemToDevice = async () => {
         style={{flex: 1, justifyContent: 'flex-start'}}
         resizeMode='repeat'
       >
-
         <View style={styles.header}>
           <Text style={styles.title}>Lista de Produtos</Text>
           <Ionicons name="trash" size={32} color="#fff" onPress={removeAll} />
         </View>
 
         <FlatList
-          contentContainerStyle={{padding: 20, paddingBottom: 100, color: '#fff'}}
+          contentContainerStyle={{ padding: 20, paddingBottom: 100, color:'#fff'}}
           data={items}
           keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => 
+          renderItem={({ item }) =>
             <ItemList
-              item = {item} 
-              markItem ={markItemBought}
-              unmarkItemBought={unmarkItemBought}
+              item={item}
+              markItem={markItemBought}
+              unmarkItem={unmarkItemBought}
               removeItem={removeItem}
-              />
+            />
           }
         />
 
         <View style={styles.footer}>
           <View style={styles.inputContainer}>
-            <TextInput 
-              color='#fff' 
-              fontSize={18} 
+            <TextInput
+              color="#fff"
+              fontSize={18}
               placeholder='Digite o nome do produto...'
               placeholderTextColor='#aeaeae'
               value={textInput}
@@ -150,27 +120,27 @@ const saveItemToDevice = async () => {
         </View>
 
       </ImageBackground>
-   </SafeAreaView>
+    </SafeAreaView>
   )
 }
 
 const styles = StyleSheet.create({
-  header:{
+  header: {
     padding: 25,
     paddingTop: 50,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#000000c0',
-    borderBottomLeftRadius:30,
+    borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
   },
-  title:{
+  title: {
     fontSize: 26,
     fontWeight: 'bold',
     color: '#fff'
   },
-  footer:{
+  footer: {
     position: 'absolute',
     bottom: 0,
     width: '100%',
@@ -181,8 +151,8 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
   },
-  inputContainer:{
-    backgroundColor:'#000',
+  inputContainer: {
+    backgroundColor: "#000",
     elevation: 40,
     flex: 1,
     height: 50,
@@ -191,13 +161,13 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     justifyContent: 'center',
   },
-  iconContainer:{
+  iconContainer: {
     height: 50,
     width: 50,
     backgroundColor: '#000',
     borderRadius: 25,
     elevation: 40,
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'center'
   }
 })
